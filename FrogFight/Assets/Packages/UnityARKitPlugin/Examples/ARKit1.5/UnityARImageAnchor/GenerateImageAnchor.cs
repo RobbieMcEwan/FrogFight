@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
 public class GenerateImageAnchor : MonoBehaviour {
 
+    public Action OnImageFound;
 
 	[SerializeField]
 	private ARReferenceImage referenceImage;
@@ -48,40 +50,15 @@ public class GenerateImageAnchor : MonoBehaviour {
             var position = UnityARMatrixOps.GetPosition(hit.worldTransform);
 
             cubeInstance = Instantiate<GameObject>(prefabToGenerate, position, Quaternion.identity);
+
+            // Notify all subscibers that he has found an image
+            OnImageFound?.Invoke();
         }
-
-
-
-        return;
-        Debug.LogFormat("image anchor added[{0}] : tracked => {1}", arImageAnchor.identifier, arImageAnchor.isTracked);
-		if (arImageAnchor.referenceImageName == referenceImage.imageName) {
-			Vector3 position = UnityARMatrixOps.GetPosition (arImageAnchor.transform);
-			Quaternion rotation = UnityARMatrixOps.GetRotation (arImageAnchor.transform);
-
-			imageAnchorGO = Instantiate<GameObject> (prefabToGenerate, position, rotation);
-		}
 	}
 
 
     void UpdateImageAnchor(ARImageAnchor arImageAnchor)
 	{
-        return;
-		Debug.LogFormat("image anchor updated[{0}] : tracked => {1}", arImageAnchor.identifier, arImageAnchor.isTracked);
-		if (arImageAnchor.referenceImageName == referenceImage.imageName) {
-            if (arImageAnchor.isTracked)
-            {
-                if (!imageAnchorGO.activeSelf)
-                {
-                    imageAnchorGO.SetActive(true);
-                }
-                imageAnchorGO.transform.position = UnityARMatrixOps.GetPosition(arImageAnchor.transform);
-                imageAnchorGO.transform.rotation = UnityARMatrixOps.GetRotation(arImageAnchor.transform);
-            }
-            else if (imageAnchorGO.activeSelf)
-            {
-                imageAnchorGO.SetActive(false);
-            }
-        }
 
 	}
 
